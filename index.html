@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Былина небылица · Демо</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; width: 100%; height: 100%; background: #10151d; color: #f7ead1; font: 16px system-ui, sans-serif; }
+    canvas { display: block; width: 100%; height: 100%; outline: none; }
+    #loading { position: fixed; inset: 0; display: grid; place-content: center; gap: 18px; text-align: center; background: #10151d; padding: 24px; }
+    progress { width: min(360px, 80vw); accent-color: #e7b85d; }
+    #error { position: fixed; bottom: 20px; left: 20px; right: 20px; padding: 16px; background: #592c24; white-space: pre-wrap; }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+  <canvas id="game" tabindex="0" aria-label="Былина небылица"></canvas>
+  <div id="loading"><strong>Былина небылица</strong><span id="status">Загружаем демо…</span><progress id="progress" max="1" value="0"></progress></div>
+  <div id="error" role="alert" hidden></div>
+  <script>
+    const canvas = document.getElementById('game');
+    const loading = document.getElementById('loading');
+    function showError(message) {
+      const box = document.getElementById('error');
+      box.hidden = false;
+      box.textContent = 'Не удалось запустить игру. Попробуйте обновить страницу.\n' + message;
+    }
+    const config = {
+      dataUrl: 'Build/WebGL.data.unityweb',
+      frameworkUrl: 'Build/WebGL.framework.js.unityweb',
+      codeUrl: 'Build/WebGL.wasm.unityweb',
+      streamingAssetsUrl: 'StreamingAssets',
+      companyName: "DefaultCompany",
+      productName: "Was Wasn't",
+      productVersion: "0.1.0",
+      // Синхронизация сохранений вызывается явно после записей из C#.
+      autoSyncPersistentDataPath: false,
+      devicePixelRatio: Math.min(window.devicePixelRatio || 1, 1.5),
+      showBanner: (message, type) => { if (type === 'error') showError(message); else console.warn(message); }
+    };
+    const script = document.createElement('script');
+    script.src = 'Build/WebGL.loader.js';
+    script.onerror = () => showError('Не удалось загрузить файлы игры.');
+    script.onload = () => createUnityInstance(canvas, config, value => {
+      document.getElementById('progress').value = value;
+      document.getElementById('status').textContent = 'Загрузка: ' + Math.round(value * 100) + '%';
+    }).then(instance => {
+      window.unityInstance = instance;
+      loading.hidden = true;
+      canvas.focus();
+    }).catch(showError);
+    document.body.appendChild(script);
+    canvas.addEventListener('contextmenu', event => event.preventDefault());
+  </script>
+</body>
+</html>
