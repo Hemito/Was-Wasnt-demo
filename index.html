@@ -27,9 +27,9 @@
       box.textContent = 'Не удалось запустить игру. Попробуйте обновить страницу.\n' + message;
     }
     const config = {
-      dataUrl: 'Build/WebGL.data.unityweb',
-      frameworkUrl: 'Build/WebGL.framework.js.unityweb',
-      codeUrl: 'Build/WebGL.wasm.unityweb',
+      dataUrl: 'Build/WebGL.data.03f442b56094.unityweb',
+      frameworkUrl: 'Build/WebGL.framework.js.1ce488ebf430.unityweb',
+      codeUrl: 'Build/WebGL.wasm.9cdb0b35e361.unityweb',
       streamingAssetsUrl: 'StreamingAssets',
       companyName: "DefaultCompany",
       productName: "Was Wasn't",
@@ -43,17 +43,17 @@
     let dataBlobUrl;
     async function prepareData() {
       const chunks = [];
-      for (const [index, url] of ["Build/WebGL.data.unityweb.part0", "Build/WebGL.data.unityweb.part1", "Build/WebGL.data.unityweb.part2", "Build/WebGL.data.unityweb.part3"].entries()) {
+      for (const [index, url] of ["Build/WebGL.data.03f442b56094.unityweb.part0", "Build/WebGL.data.03f442b56094.unityweb.part1", "Build/WebGL.data.03f442b56094.unityweb.part2", "Build/WebGL.data.03f442b56094.unityweb.part3"].entries()) {
         const response = await fetch(url);
         if (!response.ok) throw new Error('Не удалось загрузить часть данных: ' + response.status);
         chunks.push(await response.arrayBuffer());
-        document.getElementById('progress').value = (index + 1) / ["Build/WebGL.data.unityweb.part0", "Build/WebGL.data.unityweb.part1", "Build/WebGL.data.unityweb.part2", "Build/WebGL.data.unityweb.part3"].length * .35;
+        document.getElementById('progress').value = (index + 1) / ["Build/WebGL.data.03f442b56094.unityweb.part0", "Build/WebGL.data.03f442b56094.unityweb.part1", "Build/WebGL.data.03f442b56094.unityweb.part2", "Build/WebGL.data.03f442b56094.unityweb.part3"].length * .35;
       }
       dataBlobUrl = URL.createObjectURL(new Blob(chunks, {type: 'application/octet-stream'}));
       config.dataUrl = dataBlobUrl;
     }
     const script = document.createElement('script');
-    script.src = 'Build/WebGL.loader.js';
+    script.src = 'Build/WebGL.loader.2fdcab8d2861.js';
     script.onerror = () => showError('Не удалось загрузить файлы игры.');
     script.onload = () => prepareData().then(() => createUnityInstance(canvas, config, value => {
       document.getElementById('progress').value = value;
