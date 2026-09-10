@@ -27,9 +27,9 @@
       box.textContent = 'Не удалось запустить игру. Попробуйте обновить страницу.\n' + message;
     }
     const config = {
-      dataUrl: 'Build/WebGL.data.20f7383b036b.unityweb',
-      frameworkUrl: 'Build/WebGL.framework.js.43811d413eac.unityweb',
-      codeUrl: 'Build/WebGL.wasm.1a935286b0ab.unityweb',
+      dataUrl: 'Build/WebGL.data.78ea467148f9.unityweb',
+      frameworkUrl: 'Build/WebGL.framework.js.f5a50f843583.unityweb',
+      codeUrl: 'Build/WebGL.wasm.28b54ca4e946.unityweb',
       streamingAssetsUrl: 'StreamingAssets',
       companyName: "DefaultCompany",
       productName: "Was Wasn't",
@@ -40,7 +40,7 @@
       showBanner: (message, type) => { if (type === 'error') showError(message); else console.warn(message); }
     };
     const script = document.createElement('script');
-    script.src = 'Build/WebGL.loader.8de978553344.js';
+    script.src = 'Build/WebGL.loader.4764acd9facf.js';
     script.onerror = () => showError('Не удалось загрузить файлы игры.');
     script.onload = () => createUnityInstance(canvas, config, value => {
       document.getElementById('progress').value = value;
