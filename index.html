@@ -1,7 +1,6 @@
 <!doctype html>
 <html lang="ru">
 <head>
-<meta name="demo-release" content="93d37cc">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Былина небылица · Демо</title>
@@ -28,9 +27,9 @@
       box.textContent = 'Не удалось запустить игру. Попробуйте обновить страницу.\n' + message;
     }
     const config = {
-      dataUrl: 'Build/WebGL.data.78ea467148f9.unityweb',
-      frameworkUrl: 'Build/WebGL.framework.js.f5a50f843583.unityweb',
-      codeUrl: 'Build/WebGL.wasm.28b54ca4e946.unityweb',
+      dataUrl: 'Build/WebGL.data.cce90ded5400.unityweb',
+      frameworkUrl: 'Build/WebGL.framework.js.782ff215168e.unityweb',
+      codeUrl: 'Build/WebGL.wasm.82d6ca3a495b.unityweb',
       streamingAssetsUrl: 'StreamingAssets',
       companyName: "DefaultCompany",
       productName: "Was Wasn't",
@@ -41,7 +40,7 @@
       showBanner: (message, type) => { if (type === 'error') showError(message); else console.warn(message); }
     };
     const script = document.createElement('script');
-    script.src = 'Build/WebGL.loader.4764acd9facf.js';
+    script.src = 'Build/WebGL.loader.8ae42d189bc3.js';
     script.onerror = () => showError('Не удалось загрузить файлы игры.');
     script.onload = () => createUnityInstance(canvas, config, value => {
       document.getElementById('progress').value = value;
