@@ -27,9 +27,9 @@
       box.textContent = 'Не удалось запустить игру. Попробуйте обновить страницу.\n' + message;
     }
     const config = {
-      dataUrl: 'Build/WebGL.data.03f442b56094.unityweb',
-      frameworkUrl: 'Build/WebGL.framework.js.1ce488ebf430.unityweb',
-      codeUrl: 'Build/WebGL.wasm.9cdb0b35e361.unityweb',
+      dataUrl: 'Build/WebGL.data.62e06bdf7128.unityweb',
+      frameworkUrl: 'Build/WebGL.framework.js.465afcd33de2.unityweb',
+      codeUrl: 'Build/WebGL.wasm.c16df8309a8a.unityweb',
       streamingAssetsUrl: 'StreamingAssets',
       companyName: "DefaultCompany",
       productName: "Was Wasn't",
@@ -39,31 +39,17 @@
       devicePixelRatio: Math.min(window.devicePixelRatio || 1, 1.5),
       showBanner: (message, type) => { if (type === 'error') showError(message); else console.warn(message); }
     };
-
-    let dataBlobUrl;
-    async function prepareData() {
-      const chunks = [];
-      for (const [index, url] of ["Build/WebGL.data.03f442b56094.unityweb.part0", "Build/WebGL.data.03f442b56094.unityweb.part1", "Build/WebGL.data.03f442b56094.unityweb.part2", "Build/WebGL.data.03f442b56094.unityweb.part3"].entries()) {
-        const response = await fetch(url);
-        if (!response.ok) throw new Error('Не удалось загрузить часть данных: ' + response.status);
-        chunks.push(await response.arrayBuffer());
-        document.getElementById('progress').value = (index + 1) / ["Build/WebGL.data.03f442b56094.unityweb.part0", "Build/WebGL.data.03f442b56094.unityweb.part1", "Build/WebGL.data.03f442b56094.unityweb.part2", "Build/WebGL.data.03f442b56094.unityweb.part3"].length * .35;
-      }
-      dataBlobUrl = URL.createObjectURL(new Blob(chunks, {type: 'application/octet-stream'}));
-      config.dataUrl = dataBlobUrl;
-    }
     const script = document.createElement('script');
-    script.src = 'Build/WebGL.loader.2fdcab8d2861.js';
+    script.src = 'Build/WebGL.loader.e9947b96c6b1.js';
     script.onerror = () => showError('Не удалось загрузить файлы игры.');
-    script.onload = () => prepareData().then(() => createUnityInstance(canvas, config, value => {
+    script.onload = () => createUnityInstance(canvas, config, value => {
       document.getElementById('progress').value = value;
       document.getElementById('status').textContent = 'Загрузка: ' + Math.round(value * 100) + '%';
-    })).then(instance => {
-      URL.revokeObjectURL(dataBlobUrl);
+    }).then(instance => {
       window.unityInstance = instance;
       loading.hidden = true;
       canvas.focus();
-    }).catch(error => { if(dataBlobUrl) URL.revokeObjectURL(dataBlobUrl); showError(error); });
+    }).catch(showError);
     document.body.appendChild(script);
     canvas.addEventListener('contextmenu', event => event.preventDefault());
   </script>
