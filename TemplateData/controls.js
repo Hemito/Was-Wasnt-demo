@@ -69,7 +69,13 @@
     if (primaryEnded) { primary = null; suppressTouches = all.length > 0; }
   }
   ['start', 'move', 'end', 'cancel'].forEach(phase => canvas.addEventListener('touch' + phase, event => touch(event, phase), { passive: false, capture: true }));
-  function append(text) { output.textContent = (output.textContent + '\n' + text).slice(-24000); output.scrollTop = output.scrollHeight; }
+  function append(text) {
+    // Keep a complete observation even when one reply exceeds the history budget.
+    const historyBudget = Math.max(0, 24000 - text.length - 1);
+    const history = historyBudget > 0 ? output.textContent.slice(-historyBudget) : '';
+    output.textContent = history + '\n' + text;
+    output.scrollTop = output.scrollHeight;
+  }
   window.wasWasntConsoleReply = reply => {
     append((reply.ok ? '' : 'Ошибка: ') + reply.message);
     const callback = replies.get(reply.id); replies.delete(reply.id); if (callback) callback(reply);
