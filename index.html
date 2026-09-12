@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Былина небылица · Демо</title>
   <style>
     * { box-sizing: border-box; }
@@ -12,12 +12,33 @@
     progress { width: min(360px, 80vw); accent-color: #e7b85d; }
     #error { position: fixed; bottom: 20px; left: 20px; right: 20px; padding: 16px; background: #592c24; white-space: pre-wrap; }
     [hidden] { display: none !important; }
+    #input-controls { position:fixed; top: max(6px, env(safe-area-inset-top)); left:max(8px, env(safe-area-inset-left)); z-index: 5; font-size:12px; opacity:.85; }
+    button, select, input { font:inherit; color:#f7ead1; background:#302d25; border:1px solid #a78b5a; border-radius:6px; padding:8px; }
+    #mobile-actions { position:fixed; top:max(8px,env(safe-area-inset-top)); right:max(8px,env(safe-area-inset-right)); z-index:6; display:flex; gap:8px; }
+    #mobile-actions button { min-height:44px; }
+    #portrait { position:fixed; inset:0; z-index:20; display:grid; place-content:center; text-align:center; background:#10151d; font-size:24px; }
+    #console-panel { position:fixed; z-index:10; left:8px; top:60px; width:min(560px,95vw); background:#10151df2; border:1px solid #a78b5a; padding:10px; }
+    #console-output { white-space:pre-wrap; max-height:32vh; overflow:auto; font:12px monospace; }
+    #console-form { display:flex; gap:6px; } #console-command { min-width:0; flex:1; }
+    #game { position:absolute; top:48px; height:calc(100% - 48px); }
+    .touch-mode #game { top:calc(52px + env(safe-area-inset-top)); left:env(safe-area-inset-left); width:calc(100% - env(safe-area-inset-left) - env(safe-area-inset-right)); height:calc(100% - 52px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); }
   </style>
 </head>
 <body>
   <canvas id="game" tabindex="0" aria-label="Былина небылица"></canvas>
   <div id="loading"><strong>Былина небылица</strong><span id="status">Загружаем демо…</span><progress id="progress" max="1" value="0"></progress></div>
   <div id="error" role="alert" hidden></div>
+  <label id="input-controls"><span data-key="mobile.input">Управление</span>
+    <select id="input-mode" aria-label="Управление"><option value="auto" data-key="mobile.auto">Автоматически</option><option value="mouse" data-key="mobile.mouse">Мышь</option><option value="touch" data-key="mobile.touch">Сенсорное</option></select>
+  </label>
+  <div id="mobile-actions" hidden><button id="mobile-pause" data-key="mobile.pause">Пауза</button><button id="mobile-skip" data-key="mobile.skip">Пропустить ход</button></div>
+  <div id="portrait" hidden><span data-key="mobile.rotatePhone">Поверните телефон</span></div>
+  <section id="console-panel" hidden aria-label="Служебная консоль">
+    <div><button data-command="start">start</button> <button data-command="cancel">cancel</button> <button data-command="stop">stop</button> <button data-command="ui list">ui list</button> <button data-command="help">help</button></div>
+    <pre id="console-output">Служебная консоль. start — забрать ввод; stop — вернуть.</pre>
+    <form id="console-form"><input id="console-command" autocomplete="off" spellcheck="false" aria-label="Команда"><button type="submit">Выполнить</button></form>
+  </section>
+  <script src="TemplateData/controls.js"></script>
   <script>
     const canvas = document.getElementById('game');
     const loading = document.getElementById('loading');
@@ -27,9 +48,9 @@
       box.textContent = 'Не удалось запустить игру. Попробуйте обновить страницу.\n' + message;
     }
     const config = {
-      dataUrl: 'Build/WebGL.data.cce90ded5400.unityweb',
-      frameworkUrl: 'Build/WebGL.framework.js.782ff215168e.unityweb',
-      codeUrl: 'Build/WebGL.wasm.82d6ca3a495b.unityweb',
+      dataUrl: 'Build/WebGL.data.10976631db42.unityweb',
+      frameworkUrl: 'Build/WebGL.framework.js.d58e5ad8d90f.unityweb',
+      codeUrl: 'Build/WebGL.wasm.58fcce55153c.unityweb',
       streamingAssetsUrl: 'StreamingAssets',
       companyName: "DefaultCompany",
       productName: "Was Wasn't",
@@ -40,13 +61,14 @@
       showBanner: (message, type) => { if (type === 'error') showError(message); else console.warn(message); }
     };
     const script = document.createElement('script');
-    script.src = 'Build/WebGL.loader.8ae42d189bc3.js';
+    script.src = 'Build/WebGL.loader.62ac39c4fabe.js';
     script.onerror = () => showError('Не удалось загрузить файлы игры.');
     script.onload = () => createUnityInstance(canvas, config, value => {
       document.getElementById('progress').value = value;
       document.getElementById('status').textContent = 'Загрузка: ' + Math.round(value * 100) + '%';
     }).then(instance => {
       window.unityInstance = instance;
+      window.wasWasntControlsReady(instance);
       loading.hidden = true;
       canvas.focus();
     }).catch(showError);
