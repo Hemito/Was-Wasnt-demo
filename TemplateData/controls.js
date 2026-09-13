@@ -5,7 +5,6 @@
   const fullscreenNote = document.getElementById('fullscreen-note');
   const mode = document.getElementById('input-mode');
   const portrait = document.getElementById('portrait');
-  const hud = document.getElementById('mobile-actions');
   const consolePanel = document.getElementById('console-panel');
   const command = document.getElementById('console-command');
   const output = document.getElementById('console-output');
@@ -29,8 +28,6 @@
     const touch = mode.value === 'touch' || (mode.value === 'auto' && matchMedia('(pointer: coarse)').matches && navigator.maxTouchPoints > 0);
     if (mobile !== touch) { cancelTouch(); mobile = touch; send('SetMobile', touch ? '1' : '0'); }
     portrait.hidden = !(mobile && innerHeight > innerWidth);
-    hud.hidden = !(mobile && window.wasWasntGameActive && portrait.hidden && !consoleOwnsInput);
-    document.body.classList.toggle('has-mobile-actions', !hud.hidden);
     fullscreenButton.hidden = !mobile || !portrait.hidden || !!document.fullscreenElement;
     if (!mobile || document.fullscreenElement) fullscreenNote.hidden = true;
     canvas.style.touchAction = mobile ? 'none' : 'auto';
@@ -63,8 +60,6 @@
   addEventListener('resize', refresh);
   addEventListener('blur', cancelTouch);
   document.addEventListener('visibilitychange', () => { if (document.hidden) cancelTouch(); });
-  document.getElementById('mobile-pause').onclick = () => send('MobilePause');
-  document.getElementById('mobile-skip').onclick = () => send('MobileSkip');
   function touch(event, phase) {
     if (!mobile || consoleOwnsInput) return;
     event.preventDefault(); event.stopImmediatePropagation();

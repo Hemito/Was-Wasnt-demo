@@ -16,14 +16,11 @@
     #fullscreen-button { position:fixed; bottom:max(8px,env(safe-area-inset-bottom)); right:max(8px,env(safe-area-inset-right)); z-index:7; min-height:44px; }
     #fullscreen-note { position:fixed; bottom:60px; right:8px; z-index:8; max-width:320px; padding:12px; background:#302d25; }
     button, select, input { font:inherit; color:#f7ead1; background:#302d25; border:1px solid #a78b5a; border-radius:6px; padding:8px; }
-    #mobile-actions { position:fixed; top:max(8px,env(safe-area-inset-top)); right:max(8px,env(safe-area-inset-right)); z-index:6; display:flex; gap:8px; }
-    #mobile-actions button { min-height:44px; }
     #portrait { position:fixed; inset:0; z-index:20; display:grid; place-content:center; text-align:center; background:#10151d; font-size:24px; }
     #console-panel { position:fixed; z-index:10; left:8px; top:60px; width:min(560px,95vw); background:#10151df2; border:1px solid #a78b5a; padding:10px; }
     #console-output { white-space:pre-wrap; max-height:32vh; overflow:auto; font:12px monospace; }
     #console-form { display:flex; gap:6px; } #console-command { min-width:0; flex:1; }
     #game { position:absolute; inset:0; height:100%; }
-    .touch-mode.has-mobile-actions #game { top:calc(52px + env(safe-area-inset-top)); left:env(safe-area-inset-left); width:calc(100% - env(safe-area-inset-left) - env(safe-area-inset-right)); height:calc(100% - 52px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); }
   </style>
 </head>
 <body>
@@ -31,7 +28,6 @@
   <div id="loading"><strong>Былина небылица</strong><span id="status">Загружаем демо…</span><progress id="progress" max="1" value="0"></progress></div>
   <div id="error" role="alert" hidden></div>
 
-  <div id="mobile-actions" hidden><button id="mobile-pause" data-key="mobile.pause">Пауза</button><button id="mobile-skip" data-key="mobile.skip">Пропустить ход</button></div>
   <button id="fullscreen-button" data-key="mobile.fullscreen" hidden>На весь экран</button>
   <div id="fullscreen-note" role="status" data-key="mobile.fullscreenUnavailable" hidden>Полный экран недоступен. Откройте ссылку в обычном браузере через меню ⋮.</div>
   <div id="portrait" hidden><span data-key="mobile.rotatePhone">Поверните телефон</span></div>
@@ -53,9 +49,9 @@
       box.textContent = 'Не удалось запустить игру. Попробуйте обновить страницу.\n' + message;
     }
     const config = {
-      dataUrl: 'Build/WebGLMissionConsole.data.98417d0f40af.unityweb',
-      frameworkUrl: 'Build/WebGLMissionConsole.framework.js.758b3a1013c8.unityweb',
-      codeUrl: 'Build/WebGLMissionConsole.wasm.fa411971881e.unityweb',
+      dataUrl: 'Build/WebGLMirrorMobile.data.811c94298c91.unityweb',
+      frameworkUrl: 'Build/WebGLMirrorMobile.framework.js.cf39f47eff7f.unityweb',
+      codeUrl: 'Build/WebGLMirrorMobile.wasm.dfe6ecefadda.unityweb',
       streamingAssetsUrl: 'StreamingAssets',
       companyName: "DefaultCompany",
       productName: "Was Wasn't",
@@ -66,7 +62,7 @@
       showBanner: (message, type) => { if (type === 'error') showError(message); else console.warn(message); }
     };
     const script = document.createElement('script');
-    script.src = 'Build/WebGLMissionConsole.loader.560c7193c5b8.js';
+    script.src = 'Build/WebGLMirrorMobile.loader.0e5a26918223.js';
     script.onerror = () => showError('Не удалось загрузить файлы игры.');
     script.onload = () => createUnityInstance(canvas, config, value => {
       document.getElementById('progress').value = value;
