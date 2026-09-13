@@ -1,6 +1,8 @@
 (() => {
   'use strict';
   const canvas = document.getElementById('game');
+  const fullscreenButton = document.getElementById('fullscreen-button');
+  const fullscreenNote = document.getElementById('fullscreen-note');
   const mode = document.getElementById('input-mode');
   const portrait = document.getElementById('portrait');
   const hud = document.getElementById('mobile-actions');
@@ -13,8 +15,8 @@
   const query = new URLSearchParams(location.search);
   consolePanel.hidden = query.get('console') !== '1';
   const copy = {
-    ru: { 'mobile.pause': 'Пауза', 'mobile.skip': 'Пропустить ход', 'mobile.rotatePhone': 'Поверните телефон', 'mobile.input': 'Управление', 'mobile.auto': 'Автоматически', 'mobile.mouse': 'Мышь', 'mobile.touch': 'Сенсорное' },
-    en: { 'mobile.pause': 'Pause', 'mobile.skip': 'Skip turn', 'mobile.rotatePhone': 'Rotate your phone', 'mobile.input': 'Controls', 'mobile.auto': 'Automatic', 'mobile.mouse': 'Mouse', 'mobile.touch': 'Touch' }
+    ru: { 'mobile.fullscreen': 'На весь экран', 'mobile.fullscreenUnavailable': 'Полный экран недоступен. Откройте ссылку в обычном браузере через меню ⋮.', 'mobile.pause': 'Пауза', 'mobile.skip': 'Пропустить ход', 'mobile.rotatePhone': 'Поверните телефон', 'mobile.input': 'Управление', 'mobile.auto': 'Автоматически', 'mobile.mouse': 'Мышь', 'mobile.touch': 'Сенсорное' },
+    en: { 'mobile.fullscreen': 'Full screen', 'mobile.fullscreenUnavailable': 'Full screen is unavailable. Open this link in your browser using the ⋮ menu.', 'mobile.pause': 'Pause', 'mobile.skip': 'Skip turn', 'mobile.rotatePhone': 'Rotate your phone', 'mobile.input': 'Controls', 'mobile.auto': 'Automatic', 'mobile.mouse': 'Mouse', 'mobile.touch': 'Touch' }
   };
   window.wasWasntSetLocale = locale => {
     const table = copy[locale === 'dev' ? 'ru' : locale];
@@ -28,6 +30,9 @@
     if (mobile !== touch) { cancelTouch(); mobile = touch; send('SetMobile', touch ? '1' : '0'); }
     portrait.hidden = !(mobile && innerHeight > innerWidth);
     hud.hidden = !(mobile && window.wasWasntGameActive && portrait.hidden && !consoleOwnsInput);
+    document.body.classList.toggle('has-mobile-actions', !hud.hidden);
+    fullscreenButton.hidden = !mobile || !portrait.hidden || !!document.fullscreenElement;
+    if (!mobile || document.fullscreenElement) fullscreenNote.hidden = true;
     canvas.style.touchAction = mobile ? 'none' : 'auto';
     document.body.classList.toggle('touch-mode', mobile);
     if (!portrait.hidden) cancelTouch();
@@ -42,6 +47,19 @@
     try { localStorage.setItem('waswasnt-input-mode', mode.value); } catch (error) { console.warn('Не удалось сохранить режим управления: ' + error.message); }
     refresh();
   });
+  fullscreenButton.onclick = async () => {
+    cancelTouch();
+    fullscreenNote.hidden = true;
+    try {
+      if (!document.documentElement.requestFullscreen) throw new Error('Fullscreen API недоступен');
+      await document.documentElement.requestFullscreen({ navigationUI: 'hide' });
+    } catch (error) {
+      console.warn('Не удалось включить полный экран: ' + error.message);
+      fullscreenNote.hidden = false;
+    }
+    refresh();
+  };
+  document.addEventListener('fullscreenchange', () => { cancelTouch(); refresh(); });
   addEventListener('resize', refresh);
   addEventListener('blur', cancelTouch);
   document.addEventListener('visibilitychange', () => { if (document.hidden) cancelTouch(); });
