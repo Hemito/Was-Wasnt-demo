@@ -49,9 +49,9 @@
       box.textContent = 'Не удалось запустить игру. Попробуйте обновить страницу.\n' + message;
     }
     const config = {
-      dataUrl: 'Build/WebGLReports.data.7b76bd3680c5.unityweb',
-      frameworkUrl: 'Build/WebGLReports.framework.js.030eacbfda19.unityweb',
-      codeUrl: 'Build/WebGLReports.wasm.fbae5097e18f.unityweb',
+      dataUrl: 'Build/WebGLHotfix.data.6e38ccabb730.unityweb',
+      frameworkUrl: 'Build/WebGLHotfix.framework.js.cc60c835b2b0.unityweb',
+      codeUrl: 'Build/WebGLHotfix.wasm.fccae43e4ab4.unityweb',
       streamingAssetsUrl: 'StreamingAssets',
       companyName: "DefaultCompany",
       productName: "Was Wasn't",
@@ -59,10 +59,10 @@
       // Синхронизация сохранений вызывается явно после записей из C#.
       autoSyncPersistentDataPath: false,
       devicePixelRatio: Math.min(window.devicePixelRatio || 1, 1.5),
-      showBanner: (message, type) => { if (type === 'error') showError(message); else console.warn(message); }
+      showBanner: (message, type) => { if (type === 'error') { const box = document.getElementById('error'); box.hidden = false; box.textContent = message; } else console.warn(message); }
     };
     const script = document.createElement('script');
-    script.src = 'Build/WebGLReports.loader.09252ab41aed.js';
+    script.src = 'Build/WebGLHotfix.loader.294d02f63536.js';
     script.onerror = () => showError('Не удалось загрузить файлы игры.');
     script.onload = () => createUnityInstance(canvas, config, value => {
       document.getElementById('progress').value = value;
