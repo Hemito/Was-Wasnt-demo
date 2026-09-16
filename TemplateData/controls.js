@@ -13,10 +13,8 @@
   const replies = new Map();
   const query = new URLSearchParams(location.search);
   consolePanel.hidden = query.get('console') !== '1';
-  const copy = {
-    ru: { 'mobile.fullscreen': 'На весь экран', 'mobile.fullscreenUnavailable': 'Полный экран недоступен. Откройте ссылку в обычном браузере через меню ⋮.', 'mobile.pause': 'Пауза', 'mobile.skip': 'Пропустить ход', 'mobile.rotatePhone': 'Поверните телефон', 'mobile.input': 'Управление', 'mobile.auto': 'Автоматически', 'mobile.mouse': 'Мышь', 'mobile.touch': 'Сенсорное' },
-    en: { 'mobile.fullscreen': 'Full screen', 'mobile.fullscreenUnavailable': 'Full screen is unavailable. Open this link in your browser using the ⋮ menu.', 'mobile.pause': 'Pause', 'mobile.skip': 'Skip turn', 'mobile.rotatePhone': 'Rotate your phone', 'mobile.input': 'Controls', 'mobile.auto': 'Automatic', 'mobile.mouse': 'Mouse', 'mobile.touch': 'Touch' }
-  };
+  const copy = Object.fromEntries(window.wasWasntLanguages.map(locale => [locale.code,
+    Object.fromEntries(locale.mobile.map(entry => [entry.key, entry.text]))]));
   window.wasWasntSetLocale = locale => {
     const table = copy[locale === 'dev' ? 'ru' : locale];
     if (!table && locale !== 'dev.key') console.warn('Неизвестная локаль браузерного управления: ' + locale);
@@ -110,5 +108,5 @@
   command.addEventListener('keydown', event => {
     if (event.key === 'ArrowUp' || event.key === 'ArrowDown') { event.preventDefault(); historyIndex = Math.max(0, Math.min(history.length, historyIndex + (event.key === 'ArrowUp' ? -1 : 1))); command.value = history[historyIndex] || ''; }
   });
-  window.wasWasntSetLocale('ru');
+
 })();

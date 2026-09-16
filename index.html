@@ -1,10 +1,17 @@
 <!doctype html>
-<html lang="ru">
+<html>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Was, Wasn&#39;t · Демо</title>
+  <title>Was, Wasn&#39;t</title>
   <style>
+    #languages { position:fixed; inset:0; z-index:100; display:grid; place-items:center; background:#10151df5; padding:24px; }
+    .language-window { width:min(480px,100%); padding:28px; background:#302d25; border:1px solid #a78b5a; border-radius:8px; text-align:center; }
+    #language-title { font-size:24px; margin:0 0 24px; }
+    #language-list { display:grid; gap:10px; max-height:55vh; overflow-y:auto; }
+    #languages button { width:100%; min-height:48px; cursor:pointer; }
+    #languages button:focus-visible, #languages button[aria-pressed="true"] { outline:2px solid #e7b85d; outline-offset:-3px; }
+    #language-back { margin-top:24px; }
     * { box-sizing: border-box; }
     html, body { margin: 0; width: 100%; height: 100%; overflow:hidden; background: #10151d; color: #f7ead1; font: 16px system-ui, sans-serif; }
     canvas { display: block; width: 100%; height: 100%; outline: none; }
@@ -25,7 +32,7 @@
 </head>
 <body>
   <canvas id="game" tabindex="0" aria-label="Was, Wasn&#39;t"></canvas>
-  <div id="loading"><strong>Was, Wasn&#39;t</strong><span id="status">Загружаем демо…</span><progress id="progress" max="1" value="0"></progress></div>
+  <div id="loading" hidden><strong>Was, Wasn&#39;t</strong><span id="status"></span><progress id="progress" max="1" value="0"></progress></div>
   <div id="error" role="alert" hidden></div>
 
   <button id="fullscreen-button" data-key="mobile.fullscreen" hidden>На весь экран</button>
@@ -39,19 +46,24 @@
     <pre id="console-output">Служебная консоль. start — забрать ввод; stop — вернуть.</pre>
     <form id="console-form"><input id="console-command" autocomplete="off" spellcheck="false" aria-label="Команда"><button type="submit">Выполнить</button></form>
   </section>
+  <section id="languages" role="dialog" aria-modal="true" aria-labelledby="language-title" hidden>
+    <div class="language-window"><h1 id="language-title"></h1><div id="language-list"></div><button id="language-back" type="button"></button></div>
+  </section>
+  <script src="TemplateData/language-catalog.js"></script>
   <script src="TemplateData/controls.js"></script>
+  <script src="TemplateData/languages.js"></script>
   <script>
     const canvas = document.getElementById('game');
     const loading = document.getElementById('loading');
     function showError(message) {
       const box = document.getElementById('error');
       box.hidden = false;
-      box.textContent = 'Не удалось запустить игру. Попробуйте обновить страницу.\n' + message;
+      box.textContent = window.wasWasntLanguage.text('error') + '\n' + message;
     }
     const config = {
-      dataUrl: 'Build/WebGLHotfix.data.6e38ccabb730.unityweb',
-      frameworkUrl: 'Build/WebGLHotfix.framework.js.cc60c835b2b0.unityweb',
-      codeUrl: 'Build/WebGLHotfix.wasm.fccae43e4ab4.unityweb',
+      dataUrl: 'Build/WebGLSeptember17.data.b8c3af8cc332.unityweb',
+      frameworkUrl: 'Build/WebGLSeptember17.framework.js.f473b0b9c7d4.unityweb',
+      codeUrl: 'Build/WebGLSeptember17.wasm.f819face0c10.unityweb',
       streamingAssetsUrl: 'StreamingAssets',
       companyName: "DefaultCompany",
       productName: "Was Wasn't",
@@ -62,18 +74,22 @@
       showBanner: (message, type) => { if (type === 'error') { const box = document.getElementById('error'); box.hidden = false; box.textContent = message; } else console.warn(message); }
     };
     const script = document.createElement('script');
-    script.src = 'Build/WebGLHotfix.loader.294d02f63536.js';
-    script.onerror = () => showError('Не удалось загрузить файлы игры.');
+    script.src = 'Build/WebGLSeptember17.loader.c8db97e720cc.js';
+    script.onerror = () => showError(window.wasWasntLanguage.text('filesError'));
     script.onload = () => createUnityInstance(canvas, config, value => {
       document.getElementById('progress').value = value;
-      document.getElementById('status').textContent = 'Загрузка: ' + Math.round(value * 100) + '%';
+      document.getElementById('status').textContent = window.wasWasntLanguage.text('loading') + ' ' + Math.round(value * 100) + '%';
     }).then(instance => {
       window.unityInstance = instance;
       window.wasWasntControlsReady(instance);
       loading.hidden = true;
       canvas.focus();
     }).catch(showError);
-    document.body.appendChild(script);
+    window.wasWasntLanguage.start().then(() => {
+      loading.hidden = false;
+      document.getElementById('status').textContent = window.wasWasntLanguage.text('loading');
+      document.body.appendChild(script);
+    }).catch(error => { console.error(error); });
     canvas.addEventListener('contextmenu', event => event.preventDefault());
   </script>
 </body>
