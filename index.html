@@ -61,9 +61,9 @@
       box.textContent = window.wasWasntLanguage.text('error') + '\n' + message;
     }
     const config = {
-      dataUrl: 'Build/WebGL.data.57fcd0bf4197.unityweb',
-      frameworkUrl: 'Build/WebGL.framework.js.2968aea14294.unityweb',
-      codeUrl: 'Build/WebGL.wasm.ddd59ee6c9db.unityweb',
+      dataUrl: 'Build/WebGL.data.c9321abaac25.unityweb',
+      frameworkUrl: 'Build/WebGL.framework.js.3d6656d9cf46.unityweb',
+      codeUrl: 'Build/WebGL.wasm.25cf1cb5ea9e.unityweb',
       streamingAssetsUrl: 'StreamingAssets',
       companyName: "DefaultCompany",
       productName: "Was Wasn't",
@@ -74,7 +74,7 @@
       showBanner: (message, type) => { if (type === 'error') { const box = document.getElementById('error'); box.hidden = false; box.textContent = message; } else console.warn(message); }
     };
     const script = document.createElement('script');
-    script.src = 'Build/WebGL.loader.a371082a7cfd.js';
+    script.src = 'Build/WebGL.loader.f08c380ebf55.js';
     script.onerror = () => showError(window.wasWasntLanguage.text('filesError'));
     script.onload = () => createUnityInstance(canvas, config, value => {
       document.getElementById('progress').value = value;
